@@ -1,0 +1,44 @@
+{
+  "name": "deepstream.io-mobx",
+  "version": "0.0.1",
+  "description": "deepstreamIO integration with Mobx",
+  "keywords": [
+    "deepstream",
+    "mobx",
+    "realtime data",
+    "remote observable"
+  ],
+  "main": "./dist/deepstream.io-mobx.es.js",
+  "exports": {
+    ".": "./dist/deepstream.io-mobx.es.js"
+  },
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build && mv types/src dist/types",
+    "publish:npm": "npm run clean && npm run build && npm publish",
+    "publish:local": "npm run clean && npm run build && npm pack",
+    "clean": "rm -rf ./dist && rm -rf ./types && rm -rf ./deepstream.io-mobx*.tgz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/romanzy-1612/deepstream.io-mobx.git"
+  },
+  "author": "Roman Volovoy",
+  "license": "MIT",
+  "dependencies": {
+    "@deepstream/client": "^6.0.5",
+    "mobx": "^6.6.1",
+    "mobx-utils": "^6.0.5"
+  },
+  "devDependencies": {
+    "@adobe/lit-mobx": "^2.0.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.14",
+    "lit": "^2.0.2"
+  }
+}

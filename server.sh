@@ -1,0 +1,1 @@
+docker run -p 6020:6020 deepstreamio/deepstream.io
