@@ -18,6 +18,8 @@ npm install
 npm run dev
 ```
 
+You also need to run deepstream server. If you have docker installed run `server.sh`.
+
 ## Quick example
 
 First create a global instance of the client and login
@@ -62,18 +64,68 @@ export const personStore = new RemoteRecord(
   () => new PersonRecord(),
   {
     client: dsClient.client,
+    autocreate: true
   }
 );
 ```
 
-And use it inside your project, while making sure not to access personStore.doc property when it is not ready. This can be done by checking isLive property on the RemoteRecord.
+And use it as you would normally use mobx. Note: make sure not to access doc property on RemoteRecord when it is not ready, as it will not be initialized. This can be done by checking isReady property on the RemoteRecord. Example:
+
+```
+@customElement('person-record')
+export class DemoApp extends MobxReactionUpdate(LitElement) {
+  private person = personStore;
+
+  render() {
+    if (!this.person.isReady)
+      return html`
+        <div class="root">
+          Loading...
+          <div>ready? ${this.person.isInitialized}</div>
+          <div>does exist? ${this.person.doesExist}</div>
+          <button
+            @click=${() =>
+              this.person.create({
+                name: 'mark',
+                age: 33,
+              })}
+          >
+            create mark
+          </button>
+        </div>
+      `;
+
+    return html`
+      <div class="root">
+        <div>User profile:</div>
+        <div>name: ${this.person.doc.name}</div>
+        <div>age: ${this.person.doc.age}</div>
+        <div>Is old? ${this.person.doc.isOld ? 'yes' : 'no'}</div>
+        <input
+          .value=${this.person.doc.name}
+          placeholder="enter name"
+          @input=${(e: any) => {
+            this.person.doc.setName(e.target.value);
+          }}
+        />
+        <input
+          .value=${this.person.doc.age.toString()}
+          placeholder="enter age"
+          @input=${(e: any) => {
+            this.person.doc.setAge(Number(e.target.value));
+          }}
+        />
+        <button @click=${() => this.person.delete()}>Delete document</button>
+      </div>
+    `;
+  }
+```
 
 ## TODO
 
 - [x] DsClientInstance - wrapper around the client
 - [x] RemoteRecord - wrapper around Record
-- [ ]
-- [ ] Nested record properties
+- [ ] Nested record properties (path translation)
 - [ ] RemoteList - wrapper around List
 - [ ] RemoteCollection - a map of records in the list
 - [ ] Nested records and list - detect if properties are RemoteRecord or RemoteList and load them automatically, while nesting the path of the document
@@ -82,5 +134,4 @@ And use it inside your project, while making sure not to access personStore.doc 
 
 - [ ] Deletion of plain arrays in the record (undefined does not work)
 - [ ] Non-existing deleted then created record has instabilities
-
-## Prossibly not working features
+- [ ] Possible? race condition when updating multiple properties as the same time, as deepstream does not support batching/transactions
