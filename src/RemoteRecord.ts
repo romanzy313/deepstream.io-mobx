@@ -59,13 +59,33 @@ export class RemoteRecord<T> {
 
   private subHandler?: SubCallback;
 
-  //need a reference to record for our doc store
-
   // public doc: T | {} = {};
   public doc!: T;
 
+  // TODO overload in order create with auto path
+  constructor(
+    path: string,
+    storeCreatorFn: StoreCreatorFn<T>,
+    opts: RecordOpts = {}
+  ) {
+    this.path = path;
+    this.doc = storeCreatorFn();
+
+    if (!opts.client) {
+      throw new Error('auto client is not supported yet');
+    }
+    this.client = opts.client;
+
+    //todo actually remove the client, need a copy
+    this.config = Object.assign({}, defaultRecordOpts, opts);
+    this.logger = makeLogger(this.config.logger, path);
+    //need an async function here
+    this._init();
+    makeAutoObservable(this);
+  }
+
   get isReady() {
-    return this.isInitialized && this.doesExist;
+    return this.record && this.isInitialized && this.doesExist;
   }
 
   //internal, dont use
@@ -222,28 +242,5 @@ export class RemoteRecord<T> {
       // })
     }
     this._sync();
-  }
-
-  //todo overload in order create without path
-  constructor(
-    path: string,
-    storeCreatorFn: StoreCreatorFn<T>,
-    opts: RecordOpts = {}
-  ) {
-    this.path = path;
-    this.doc = storeCreatorFn();
-    // this.config = { ...defaultOpts, ...opts };
-
-    if (!opts.client) {
-      throw new Error('auto client is not supported yet');
-    }
-    this.client = opts.client;
-
-    //todo actually remove the client, need a copy
-    this.config = Object.assign({}, defaultRecordOpts, opts);
-    this.logger = makeLogger(this.config.logger, path);
-    //need an async function here
-    this._init();
-    makeAutoObservable(this);
   }
 }
