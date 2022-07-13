@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import { Record } from '@deepstream/client/dist/src/record/record';
 import { DeepstreamClient } from '@deepstream/client';
 import {
+  convertMobxPathToDsPath,
   isRecordEmpty,
   LoggerType,
   makeLogger,
@@ -139,9 +140,9 @@ export class RemoteRecord<T> {
     return this.record.delete();
   }
 
-  private _applyMobxPatch(name: string, value: any) {
-    this.logger.log('updating remote prop `', name, '` with', value);
-    this.record!.set(name, value);
+  private _applyMobxPatch(path: string, value: any) {
+    this.logger.log('updating remote path `', path, '` with', value);
+    this.record!.set(path, value);
   }
 
   private _sync() {
@@ -151,9 +152,7 @@ export class RemoteRecord<T> {
         return;
       }
       if (change.observableKind == 'object' && change.type == 'update') {
-        const leaf = change.name as string;
-        // TODO proper paths
-        const fullPath = path ? `${path}.${leaf}` : leaf;
+        const fullPath = convertMobxPathToDsPath(change.name as string, path);
 
         //after set it is not ready, but its okay, deepstream recovers from that
         this._applyMobxPatch(fullPath, change.newValue);

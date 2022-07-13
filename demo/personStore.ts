@@ -5,6 +5,10 @@ import { baseDocName, dsClient } from './dsStore';
 export class PersonRecord {
   name: string = 'Bob';
   age: number = 23;
+  interestedIn = {
+    mobx: false,
+    deepstream: false,
+  };
 
   get isOld() {
     return this.age >= 21;
@@ -16,6 +20,10 @@ export class PersonRecord {
 
   setAge(age: number) {
     this.age = age;
+  }
+
+  toggleInterest(whichOne: 'mobx' | 'deepstream') {
+    this.interestedIn[whichOne] = !this.interestedIn[whichOne];
   }
 
   constructor() {

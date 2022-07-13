@@ -34,7 +34,8 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
 
     return html`
       <div class="root">
-        <div>User profile:</div>
+        <div><strong>Profile</strong></div>
+
         <div>name: ${this.person.doc.name}</div>
         <div>age: ${this.person.doc.age}</div>
         <div>Is old? ${this.person.doc.isOld ? 'yes' : 'no'}</div>
@@ -52,39 +53,35 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
             this.person.doc.setAge(Number(e.target.value));
           }}
         />
-        <button @click=${() => this.person.delete()}>Delete document</button>
+        <div>
+          <strong>Interests</strong>
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              @input=${() => {
+                this.person.doc.toggleInterest('mobx');
+              }}
+              .checked=${this.person.doc.interestedIn.mobx}
+            />
+            MobX
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              @input=${() => {
+                this.person.doc.toggleInterest('deepstream');
+              }}
+              .checked=${this.person.doc.interestedIn.deepstream}
+            />
+            Deepstream
+          </label>
+        </div>
+        <button @click=${() => this.person.delete()}>
+          Delete document ${this.person.path}
+        </button>
       </div>
     `;
   }
 }
-
-/*
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              @input=${() => {
-                this.user.toggleInterest('blackjack');
-              }}
-              .checked=${this.user.interestedIn.blackjack}
-            />
-            Blackjack
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              @input=${() => {
-                this.user.toggleInterest('hookers');
-              }}
-              .checked=${this.user.interestedIn.hookers}
-            />
-            Hookers
-          </label>
-        </div>
-        <div>
-          Numbers: ${this.user.numbers.join(', ')}
-          <button @click=${() => this.user.addNextNumber()}>Add</button>
-          <button @click=${() => this.user.removeFirst()}>Remove</button>
-        </div>
-
-*/

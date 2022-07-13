@@ -69,7 +69,7 @@ export const personStore = new RemoteRecord(
 );
 ```
 
-And use it as you would normally use mobx. Note: make sure not to access doc property on RemoteRecord when it is not ready, as it will not be initialized. This can be done by checking isReady property on the RemoteRecord. Example:
+And use it as you would normally use MobX. Note: make sure not to access doc property on RemoteRecord when it is not ready, as it will not be initialized. This can be done by checking isReady property on the RemoteRecord. I've tries to type it correctly, but it doesn't seem to be possible. Example:
 
 ```
 @customElement('person-record')
@@ -125,8 +125,8 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
 
 - [x] DsClientInstance - wrapper around the client
 - [x] RemoteRecord - wrapper around Record
-- [ ] Nested record properties (path translation)
-- [ ] RemoteList - wrapper around List
+- [x] Nested record properties (path translation)
+- [ ] RemoteList - wrapper around List as Mobx Atom
 - [ ] RemoteCollection - a map of records in the list
 - [ ] Nested records and list - detect if properties are RemoteRecord or RemoteList and load them automatically, while nesting the path of the document
 
@@ -135,3 +135,4 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
 - [ ] Deletion of plain arrays in the record (undefined does not work)
 - [ ] Non-existing deleted then created record has instabilities
 - [ ] Possible? race condition when updating multiple properties as the same time, as deepstream does not support batching/transactions
+- [ ] Inefficient updates. The two libraries go back and forth notifying each other of changes. But there are no issues as they both do diffing, which is potentially bad for performance

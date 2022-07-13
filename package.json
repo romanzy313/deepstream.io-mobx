@@ -1,6 +1,6 @@
 {
   "name": "deepstream.io-mobx",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/deepstream.io-mobx.es.js",
   "exports": {
     ".": "./dist/deepstream.io-mobx.es.js"
@@ -24,6 +24,7 @@
   "author": "Roman Volovoy",
   "license": "MIT",
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite --host",
     "build": "tsc && vite build && mv types/src dist/types",
     "publish:npm": "npm run clean && npm run build && npm publish",

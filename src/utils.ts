@@ -54,13 +54,9 @@ export const convertMstPathToDsPath = (path: string) =>
     .join('')
     .substring(1);
 
-export const convertPath = (path: string) =>
-  path
-    .substring(1)
-    .split('/')
-    .map(val => {
-      if (/^-?\d+$/.test(val)) return `[${val}]`;
-      return `.${val}`;
-    })
-    .join('')
-    .substring(1);
+// Arrays arent supported as deepstream does not handle undefined...
+// changename technically can also be arrays
+export const convertMobxPathToDsPath = (changeName: string, path: string) => {
+  if (!path) return changeName;
+  return path.replace('/', '.').concat('.', changeName);
+};
