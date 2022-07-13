@@ -4,6 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 // import { baseDocName, dsClient } from './dsStore';
 
 import './person-record';
+import './colors-list';
 
 @customElement('demo-app')
 export class DemoApp extends MobxReactionUpdate(LitElement) {
@@ -34,6 +35,7 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
         Click Count: ${this.count}
       </button>
       <person-record></person-record>
+      <colors-list></colors-list>
     `;
   }
 

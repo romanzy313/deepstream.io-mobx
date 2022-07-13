@@ -33,14 +33,8 @@ export function waitForClientConnection(
       client.once('connectionStateChanged', sub);
       // client.on('connectionStateChanged', sub);
     }
-
     resolve();
   });
-
-  // while (client.getConnectionState() !== 'OPEN') {
-  //   console.log('waiting to connect');
-  //   await sleep(500);
-  // }
 }
 
 export const convertMstPathToDsPath = (path: string) =>

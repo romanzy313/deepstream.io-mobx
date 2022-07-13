@@ -10,25 +10,16 @@ import {
 } from './utils';
 // import { JSONObject } from '@deepstream/client/src/constants';
 import { deepObserve } from 'mobx-utils';
+import {
+  RecordInternalOpts,
+  SubCallback,
+  StoreCreatorFn,
+  RecordOpts,
+  defaultRecordOpts,
+} from './types';
 // import { TypedDocument } from './types';
 
 // export type StoreCreatorFn<T> = new () => T;
-export type StoreCreatorFn<T> = () => T;
-export type SubCallback = (snapshot: any) => void;
-
-export const defaultOpts: ClassOpts = {
-  autocreate: false,
-  logger: true,
-  // client: undefined,
-};
-
-export type Opts = {
-  autocreate: boolean;
-  logger: boolean;
-  client: DeepstreamClient; //if empty will attempt to use the global store, needs to be configured, like an instance, created with global flag
-};
-export type ConstOpts = Partial<Opts>;
-export type ClassOpts = Omit<Opts, 'client'>;
 
 // TODO need to provide nice typing, so that it can be created with T type, excluding
 type IfEquals<X, Y, A, B> = (<T>() => T extends X ? 1 : 2) extends <
@@ -63,7 +54,7 @@ export class RemoteRecord<T> {
 
   private client: DeepstreamClient;
   private record!: Record;
-  private config: ClassOpts;
+  private config: RecordInternalOpts;
   private logger: LoggerType;
 
   private subHandler?: SubCallback;
@@ -237,7 +228,7 @@ export class RemoteRecord<T> {
   constructor(
     path: string,
     storeCreatorFn: StoreCreatorFn<T>,
-    opts: ConstOpts = {}
+    opts: RecordOpts = {}
   ) {
     this.path = path;
     this.doc = storeCreatorFn();
@@ -249,7 +240,7 @@ export class RemoteRecord<T> {
     this.client = opts.client;
 
     //todo actually remove the client, need a copy
-    this.config = Object.assign({}, defaultOpts, opts);
+    this.config = Object.assign({}, defaultRecordOpts, opts);
     this.logger = makeLogger(this.config.logger, path);
     //need an async function here
     this._init();
