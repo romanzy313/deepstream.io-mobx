@@ -1,13 +1,6 @@
 {
   "name": "deepstream.io-mobx",
   "version": "0.0.1",
-  "description": "deepstreamIO integration with Mobx",
-  "keywords": [
-    "deepstream",
-    "mobx",
-    "realtime data",
-    "remote observable"
-  ],
   "main": "./dist/deepstream.io-mobx.es.js",
   "exports": {
     ".": "./dist/deepstream.io-mobx.es.js"
@@ -17,19 +10,53 @@
     "dist",
     "src"
   ],
-  "scripts": {
-    "dev": "vite --host",
-    "build": "tsc && vite build && mv types/src dist/types",
-    "publish:npm": "npm run clean && npm run build && npm publish",
-    "publish:local": "npm run clean && npm run build && npm pack",
-    "clean": "rm -rf ./dist && rm -rf ./types && rm -rf ./deepstream.io-mobx*.tgz"
-  },
+  "description": "deepstreamIO integration with Mobx",
+  "keywords": [
+    "deepstream",
+    "mobx",
+    "realtime data",
+    "remote observable"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/romanzy-1612/deepstream.io-mobx.git"
   },
   "author": "Roman Volovoy",
   "license": "MIT",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build && mv types/src dist/types",
+    "publish:npm": "npm run clean && npm run build && npm publish",
+    "publish:local": "npm run clean && npm run build && npm pack",
+    "clean": "rm -rf ./dist && rm -rf ./types && rm -rf ./deepstream.io-mobx*.tgz && rm -rf ./.nyc_output && rm -rf ./coverage",
+    "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha src/**/*.spec.ts",
+    "test:watch": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --watch --watch-files src, src/**/*.spec.ts",
+    "test:coverage": "nyc npm test"
+  },
+  "mocha": {
+    "recursive": true,
+    "reporter": "spec",
+    "require": "ts-node/register/transpile-only",
+    "exit": true
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/**/*.spec.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "lcov"
+    ]
+  },
   "dependencies": {
     "@deepstream/client": "^6.0.5",
     "mobx": "^6.6.1",
@@ -37,8 +64,18 @@
   },
   "devDependencies": {
     "@adobe/lit-mobx": "^2.0.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/sinon": "^10.0.12",
+    "chai": "^4.3.6",
+    "lit": "^2.0.2",
+    "mocha": "^10.0.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^15.1.0",
+    "sinon": "^14.0.0",
+    "ts-node": "^10.8.2",
     "typescript": "^4.5.4",
-    "vite": "^2.9.14",
-    "lit": "^2.0.2"
+    "vite": "^2.9.14"
   }
 }

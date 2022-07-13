@@ -27,3 +27,5 @@ dist-ssr
 *.local
 /types/
 deepstream.io-mobx-*.tgz
+.nyc_output
+coverage
