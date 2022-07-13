@@ -135,16 +135,17 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
 
 ## TODO
 
-- [x] DsClientInstance - wrapper around the client
-- [x] RemoteRecord - wrapper around Record
+- [x] DsClientInstance
+- [x] RemoteRecord
 - [x] Nested record properties (path translation)
-- [x] RemoteList - wrapper around List as Mobx Atom
+- [x] RemoteList
+- [x] Auto inject the client when needed
 - [ ] RemoteCollection - a map of records in the list
 - [ ] Nested records and list - allow nesting of RemoteRecord or RemoteList inside the RemoteRecord. Allow for autogeneration of paths and automatic loading/disposal
 
 ## Issues to solve
 
-- [ ] Deletion of plain arrays in the record (undefined does not work)
+- [ ] Deletion of plain arrays in the record (undefined does not work). maybe overwrite the entire array?
 - [ ] Deleting and then creating record does not work
 - [ ] Possible? race condition when updating multiple properties as the same time, as deepstream does not support batching/transactions
 - [ ] Inefficient updates. The two libraries go back and forth notifying each other of changes. But there are no issues as they both do diffing, which is potentially bad for performance

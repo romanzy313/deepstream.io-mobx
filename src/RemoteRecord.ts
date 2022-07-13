@@ -17,6 +17,8 @@ import {
   RecordOpts,
   defaultRecordOpts,
 } from './types';
+import { getClientOrAutoinject } from './AutoInjector';
+
 // import { TypedDocument } from './types';
 
 // export type StoreCreatorFn<T> = new () => T;
@@ -71,10 +73,7 @@ export class RemoteRecord<T> {
     this.path = path;
     this.doc = storeCreatorFn();
 
-    if (!opts.client) {
-      throw new Error('auto client is not supported yet');
-    }
-    this.client = opts.client;
+    this.client = getClientOrAutoinject(path, opts);
 
     //todo actually remove the client, need a copy
     this.config = Object.assign({}, defaultRecordOpts, opts);

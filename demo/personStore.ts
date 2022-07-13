@@ -42,7 +42,7 @@ export const personStore = new RemoteRecord(
   personRootName,
   () => new PersonRecord(),
   {
-    client: dsClient.client,
+    // client: dsClient.client, //it is autoinjected
     autocreate: true,
   }
 );

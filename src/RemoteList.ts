@@ -8,6 +8,7 @@ import {
   ListOpts,
   SubCallback,
 } from './types';
+import { getClientOrAutoinject } from './AutoInjector';
 // import { applyPatch, createPatch } from '../external/diff/index.js';
 
 export class RemoteList {
@@ -26,10 +27,7 @@ export class RemoteList {
     // Creates an atom to interact with the MobX core algorithm.
     this.path = path;
 
-    if (!opts.client) {
-      throw new Error('auto client is not supported yet');
-    }
-    this.client = opts.client;
+    this.client = getClientOrAutoinject(path, opts);
 
     this.config = Object.assign({}, defaultListOpts, opts);
     this.logger = makeLogger(this.config.logger, path);

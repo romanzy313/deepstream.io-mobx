@@ -1,7 +1,10 @@
 import { DsClientInstance } from '../src';
 
 export const dsClient = new DsClientInstance(
-  `ws://${window.location.hostname}:6020`
+  `ws://${window.location.hostname}:6020`,
+  {
+    autoInject: true,
+  }
 );
 dsClient.login({ username: 'test', password: 'test' });
 const hash = window.location.hash.substring(1);

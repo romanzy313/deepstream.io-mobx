@@ -3,10 +3,16 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import { DeepstreamClient } from '@deepstream/client';
 import { JSONObject } from '@deepstream/client/src/constants';
+import { AutoInjector } from './AutoInjector';
 
 export type DeepsteamClientOptions = ConstructorParameters<
   typeof DeepstreamClient
 >[1];
+
+export type WithExtraOpts = DeepsteamClientOptions &
+  Partial<{
+    autoInject: boolean;
+  }>;
 
 export type ConnectionState =
   | 'OPEN'
@@ -78,8 +84,15 @@ export class DsClientInstance<
     // });
   }
 
-  constructor(uri: string, opts?: DeepsteamClientOptions) {
+  // autoInject() {
+  //   AutoInjector.enable(this.client);
+  // }
+
+  constructor(uri: string, opts?: WithExtraOpts) {
     this.client = new DeepstreamClient(uri, opts);
+
+    if (opts && opts.autoInject) AutoInjector.enable(this.client);
+
     this.client.on('connectionStateChanged', connectionState => {
       // this.state = newState;
 
