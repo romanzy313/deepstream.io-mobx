@@ -95,10 +95,25 @@ export class RemoteList {
 
     // optimistic update
     // are they needed in this case? does ds do this for us?
+
     if (index === undefined) this.entities.push(entry);
     else this.entities.splice(index, 0, entry);
+    // if (index === undefined)
 
-    this.list!.addEntry(entry, index);
+    //this does not fix everything getting sent at once
+    const realIndex =
+      index === undefined || index > 0 ? this.entities.length - 1 : undefined; //apply on the last one?
+
+    this.logger.log(
+      'inserting',
+      entry,
+      'at',
+      realIndex,
+      'data',
+      this.list?.getEntries()
+    );
+
+    this.list!.addEntry(entry, realIndex);
     this.atom.reportChanged();
   }
 

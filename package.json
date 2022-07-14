@@ -1,6 +1,6 @@
 {
   "name": "deepstream.io-mobx",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./dist/deepstream.io-mobx.es.js",
   "exports": {
     ".": "./dist/deepstream.io-mobx.es.js"

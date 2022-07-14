@@ -10,6 +10,7 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
   static styles = css`
     .root {
       background-color: lightblue;
+      padding: 10px;
     }
   `;
 

@@ -150,3 +150,4 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
 - [ ] Possible? race condition when updating multiple properties as the same time, as deepstream does not support batching/transactions
 - [ ] Inefficient updates. The two libraries go back and forth notifying each other of changes. But there are no issues as they both do diffing, which is potentially bad for performance
 - [ ] Disposing of records have not been tested
+- [ ] List update sends the entire list though, very unexpected

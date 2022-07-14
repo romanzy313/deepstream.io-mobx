@@ -11,8 +11,7 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
   static styles = css`
     :host {
       display: block;
-      border: solid 8px gray;
-      padding: 16px;
+      border: solid 2px gray;
       max-width: 400px;
     }
   `;
@@ -31,16 +30,9 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
     // if (!dsClient.isConnected || !dsClient.isLoggedIn) return html`Connecting...`;
 
     return html`
-      <button @click=${this._onClick} part="button">
-        Click Count: ${this.count}
-      </button>
       <person-record></person-record>
       <colors-list></colors-list>
     `;
-  }
-
-  private _onClick() {
-    this.count++;
   }
 }
 

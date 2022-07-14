@@ -1,11 +1,10 @@
 import { MobxReactionUpdate } from '@adobe/lit-mobx';
 import { html, css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { createRef, Ref, ref } from 'lit/directives/ref.js';
 
 import { RemoteList } from '../src/RemoteList';
 import { baseDocName, dsClient } from './dsStore';
-import { personStore } from './personStore';
 
 @customElement('colors-list')
 export class ColorsList extends MobxReactionUpdate(LitElement) {
@@ -13,9 +12,12 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
     client: dsClient.client,
   });
 
+  // private list = dsClient.client.record.getList('test');
+
   static styles = css`
     .root {
       background-color: lightgray;
+      padding: 10px;
     }
     .color {
       padding: 4px;
@@ -28,6 +30,17 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
 
   inputRef: Ref<HTMLInputElement> = createRef();
 
+  @state()
+  listItems: string[] = [];
+
+  connectedCallback() {
+    super.connectedCallback();
+    // this.list.subscribe(e => {
+    //   this.listItems = e;
+    //   this.requestUpdate('listItems');
+    // });
+  }
+
   renderColor(name: string) {
     return html`
       <button
@@ -35,6 +48,7 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
         style="background-color: ${name}"
         @click=${() => {
           this.colors.removeEntry(name);
+          // this.list.removeEntry(name);
         }}
       ></button>
     `;
@@ -43,6 +57,7 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
   private addColor() {
     const input = this.inputRef.value!;
     this.colors.addEntry(input.value);
+    // this.list.addEntry(input.value);
     input.value = ''; //clear it
     input.focus();
   }
@@ -76,6 +91,7 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
             Add
           </button>
         </div>
+
         <button @click=${() => this.colors.delete()}>
           Delete list ${this.colors.path}
         </button>
@@ -83,3 +99,13 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
     `;
   }
 }
+
+/*
+          <div>
+          <div><strong>Manual Colors</strong></div>
+          <div style="margin-block: 4px;">
+            ${this.listItems.map(color => this.renderColor(color))}
+          </div>
+          <div><small>Click to delete a color</small></div>
+        </div>
+ */
