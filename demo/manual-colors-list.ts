@@ -83,7 +83,7 @@ export class ManualColorsList extends LitElement {
 
     return html`
       <div class="root">
-        <div><strong>Colors</strong></div>
+        <div><strong>Manual Colors</strong></div>
         <div style="margin-block: 4px;">
           ${this.entries.map(color => this.renderColor(color))}
         </div>
