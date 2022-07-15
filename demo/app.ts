@@ -5,6 +5,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import './person-record';
 import './colors-list';
+import './manual-colors-list';
 
 @customElement('demo-app')
 export class DemoApp extends MobxReactionUpdate(LitElement) {
@@ -32,6 +33,7 @@ export class DemoApp extends MobxReactionUpdate(LitElement) {
     return html`
       <person-record></person-record>
       <colors-list></colors-list>
+      <manual-colors-list></manual-colors-list>
     `;
   }
 }

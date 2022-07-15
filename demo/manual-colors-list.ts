@@ -6,15 +6,13 @@ import { createRef, Ref, ref } from 'lit/directives/ref.js';
 import { RemoteList } from '../src/RemoteList';
 import { baseDocName, dsClient } from './dsStore';
 
-@customElement('colors-list')
-export class ColorsList extends MobxReactionUpdate(LitElement) {
-  private colors = new RemoteList(baseDocName + '_colors', {
-    client: dsClient.client,
-  });
+@customElement('manual-colors-list')
+export class ManualColorsList extends LitElement {
+  private list = dsClient.client.record.getList('manual-test');
 
   static styles = css`
     .root {
-      background-color: lightgray;
+      background-color: grey;
       padding: 10px;
     }
     .color {
@@ -29,43 +27,65 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
   inputRef: Ref<HTMLInputElement> = createRef();
 
   @state()
-  listItems: string[] = [];
+  entries: string[] = [];
 
   connectedCallback() {
     super.connectedCallback();
+    this.list.whenReady(list => {
+      this.entries = list.getEntries();
+      this.requestUpdate('entries');
+      console.log('subscribing');
+
+      // list.subscribe(ent => {
+      //   console.log('all items', ent);
+      // });
+
+      list.on('entry-added', (entry, index) => {
+        this.entries.splice(index, 0, entry);
+        this.requestUpdate('entries');
+      });
+      list.on('entry-removed', (entry, index) => {
+        this.entries.splice(index, 1);
+        this.requestUpdate('entries');
+      });
+    });
     // this.list.subscribe(e => {
     //   this.listItems = e;
     //   this.requestUpdate('listItems');
     // });
   }
 
-  renderColor(name: string) {
+  renderColor(entry: string) {
     return html`
       <button
         class="color"
-        style="background-color: ${name}"
+        style="background-color: ${entry}"
         @click=${() => {
-          this.colors.removeEntry(name);
+          this.list.removeEntry(entry);
+          // this.list.removeEntry(name);
         }}
       ></button>
     `;
   }
 
-  private addColor() {
+  private addEntry() {
     const input = this.inputRef.value!;
-    this.colors.addEntry(input.value);
+    console.log('adding', input.value);
+
+    this.list.addEntry(input.value);
+    // this.list.addEntry(input.value);
     input.value = ''; //clear it
     input.focus();
   }
 
   render() {
-    if (!this.colors.isReady) return html` <div class="root">Loading...</div> `;
+    // if (!this.list.isReady) return html` <div class="root">Loading...</div> `;
 
     return html`
       <div class="root">
         <div><strong>Colors</strong></div>
         <div style="margin-block: 4px;">
-          ${this.colors.entities.map(color => this.renderColor(color))}
+          ${this.entries.map(color => this.renderColor(color))}
         </div>
         <div><small>Click to delete a color</small></div>
 
@@ -75,21 +95,21 @@ export class ColorsList extends MobxReactionUpdate(LitElement) {
             ${ref(this.inputRef)}
             @keypress=${e => {
               if (e.key == 'Enter') {
-                this.addColor();
+                this.addEntry();
               }
             }}
           />
           <button
             @click=${() => {
-              this.addColor();
+              this.addEntry();
             }}
           >
             Add
           </button>
         </div>
 
-        <button @click=${() => this.colors.delete()}>
-          Delete list ${this.colors.path}
+        <button @click=${() => this.list.delete()}>
+          Delete list ${this.list.name}
         </button>
       </div>
     `;
